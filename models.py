@@ -21,7 +21,7 @@ class Generator(nn.Module):
             *init(self.depth * 2, self.depth * 4),
             *init(self.depth * 4, self.depth * 4),
             nn.Linear(self.depth * 4, vector_size),
-            nn.Tanh()
+            nn.Sigmoid()
 
         )
 
@@ -29,7 +29,8 @@ class Generator(nn.Module):
         # noise is a random variable with normal distribution N(0, 1)
         # c is the conditional input
         gen_input = torch.cat((noise, c), -1)
-        return gen_input
+        output = self.generator(gen_input)
+        return output
 
 
 class Discriminator(nn.Module):
@@ -62,5 +63,5 @@ class Discriminator(nn.Module):
 
 def init_weights(m):
     if type(m) == nn.Linear:
-        torch.nn.init.xavier_uniform(m.weight)
+        torch.nn.init.xavier_uniform_(m.weight)
         m.bias.data.fill_(0.01)
