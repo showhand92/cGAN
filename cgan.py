@@ -14,7 +14,7 @@ from models import Discriminator, Generator, init_weights
 parser = argparse.ArgumentParser()
 parser.add_argument('--batch_size', type=int, default=128, help='input batch size')
 parser.add_argument('--vector_size', type=int, default=10, help='image size input')
-parser.add_argument('--epoch', type=int, default=200, help='number of epoch')
+parser.add_argument('--epoch', type=int, default=2000, help='number of epoch')
 parser.add_argument('--lr_rate', type=float, default=0.0002, help='learning rate')
 parser.add_argument('--beta', type=float, default=0.5, help='beta for adam optimizer')
 parser.add_argument('--beta1', type=float, default=0.999, help='beta1 for adam optimizer')
@@ -33,7 +33,6 @@ torch.manual_seed(opt.random_seed)
 
 dataset = helper.DisVectorData('./GAN-data-10.xlsx')
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batch_size, shuffle=True)
-
 
 # Building generator
 generator = Generator(opt.vector_size)
@@ -113,5 +112,6 @@ for epoch in range(opt.epoch):
     print("[Epoch: {}/{}]" "[D loss: {}]" "[G loss: {}]".format(epoch + 1, opt.epoch, d_loss.item(), g_loss.item()))
 
     # checkpoints
-    torch.save(generator.state_dict(), '{}/generator_epoch_{}.pth'.format(opt.output, epoch))
-    torch.save(discriminator.state_dict(), '{}/generator_epoch_{}.pth'.format(opt.output, epoch))
+    if epoch % 10 == 0:
+        torch.save(generator.state_dict(), '{}/generator_epoch_{}.pth'.format(opt.output, epoch))
+        torch.save(discriminator.state_dict(), '{}/discriminator_epoch{}.pth'.format(opt.output, epoch))

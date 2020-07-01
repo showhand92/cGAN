@@ -1,1 +1,5 @@
 .idea/*
+.results/*
+.out/*
+__pycache__/
+*.xlsx
